@@ -4,16 +4,17 @@ class Main {
 	turnPlayer: string;
 	numberOfTurns: number;
 	grid: (number | string)[][];
-	constructor() {
-		this.turnPlayer = "X";
+	constructor(startingPalyer: string = "X") {
+		this.turnPlayer = startingPalyer;
 		this.numberOfTurns = 0;
 		this.grid = Array.from({ length: 3 }).map(() =>
 			Array.from({ length: 3 }).map(() => 0)
 		);
 	}
-	createGrid() {
-		$("#main").addClass("grid-container");
-		$("#main").css({
+	displayGrid(): void {
+		const $main = $("#main");
+		$main.addClass("grid-container");
+		$main.css({
 			display: "grid",
 			"grid-template-columns": "auto auto auto",
 			"grid-gap": "10px",
@@ -21,10 +22,10 @@ class Main {
 			padding: "10px",
 		});
 		_.range(1, 10).forEach((number: number) => {
-			$("#main").append(this.createTile(number));
+			$main.append(this.createTile(number));
 		});
 	}
-	createTile(tileId: number) {
+	createTile(tileId: number): string {
 		const $tile = $(
 			`<div class="tile" class="grid-item" id="${tileId}"></div>`
 		);
@@ -40,25 +41,24 @@ class Main {
 		});
 		return $tile;
 	}
-	fillTile(tileId, row, col) {
+	fillTile(tileId: number, row: number, col: number): void {
 		!$(`#${tileId}`)[0].innerHTML &&
 			($(`#${tileId}`)[0].innerHTML = this.turnPlayer);
-		console.log({ tileId, col, row });
 		this.grid[row][col] = this.turnPlayer;
 		this.switchTurnPlayer();
 	}
-	switchTurnPlayer() {
+	switchTurnPlayer(): void {
 		this.turnPlayer = this.turnPlayer === "X" ? "O" : "X";
 	}
-	findRow(tileId) {
+	findRow(tileId: number): number {
 		return tileId % 3 ? ~~(tileId / 3) : tileId / 3 - 1;
 	}
-	findCol(tileId) {
+	findCol(tileId: number): number {
 		return tileId % 3 ? (tileId % 3) - 1 : 2;
 	}
 }
 
 $(document).ready(function () {
 	const main = new Main();
-	main.createGrid();
+	main.displayGrid();
 });

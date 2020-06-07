@@ -1,15 +1,17 @@
 var Main = /** @class */ (function () {
-    function Main() {
-        this.turnPlayer = "X";
+    function Main(startingPalyer) {
+        if (startingPalyer === void 0) { startingPalyer = "X"; }
+        this.turnPlayer = startingPalyer;
         this.numberOfTurns = 0;
         this.grid = Array.from({ length: 3 }).map(function () {
             return Array.from({ length: 3 }).map(function () { return 0; });
         });
     }
-    Main.prototype.createGrid = function () {
+    Main.prototype.displayGrid = function () {
         var _this = this;
-        $("#main").addClass("grid-container");
-        $("#main").css({
+        var $main = $("#main");
+        $main.addClass("grid-container");
+        $main.css({
             display: "grid",
             "grid-template-columns": "auto auto auto",
             "grid-gap": "10px",
@@ -17,7 +19,7 @@ var Main = /** @class */ (function () {
             padding: "10px"
         });
         _.range(1, 10).forEach(function (number) {
-            $("#main").append(_this.createTile(number));
+            $main.append(_this.createTile(number));
         });
     };
     Main.prototype.createTile = function (tileId) {
@@ -38,7 +40,6 @@ var Main = /** @class */ (function () {
     Main.prototype.fillTile = function (tileId, row, col) {
         !$("#" + tileId)[0].innerHTML &&
             ($("#" + tileId)[0].innerHTML = this.turnPlayer);
-        console.log({ tileId: tileId, col: col, row: row });
         this.grid[row][col] = this.turnPlayer;
         this.switchTurnPlayer();
     };
@@ -55,5 +56,5 @@ var Main = /** @class */ (function () {
 }());
 $(document).ready(function () {
     var main = new Main();
-    main.createGrid();
+    main.displayGrid();
 });
