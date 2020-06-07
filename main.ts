@@ -4,11 +4,13 @@ class Main {
 	turnPlayer: string;
 	numberOfTurns: number;
 	grid: (string | undefined)[][];
+
 	constructor(startingPalyer: string = "X") {
 		this.turnPlayer = startingPalyer;
 		this.numberOfTurns = 0;
 		this.grid = Array.from({ length: 3 }).map(() => Array.from({ length: 3 }));
 	}
+
 	displayGrid(): void {
 		const $main = $("#main");
 		$main.addClass("grid-container");
@@ -23,6 +25,7 @@ class Main {
 			$main.append(this.createTile(number));
 		});
 	}
+
 	createTile(tileId: number): string {
 		const $tile = $(
 			`<div class="tile" class="grid-item" id="${tileId}"></div>`
@@ -39,26 +42,35 @@ class Main {
 		});
 		return $tile;
 	}
+
 	fillTile(tileId: number, row: number, col: number): void {
 		!$(`#${tileId}`)[0].innerHTML &&
 			($(`#${tileId}`)[0].innerHTML = this.turnPlayer);
 		this.grid[row][col] = this.turnPlayer;
+		this.checkForWinner();
 		this.switchTurnPlayer();
 	}
+
 	switchTurnPlayer(): void {
 		this.turnPlayer = this.turnPlayer === "X" ? "O" : "X";
 	}
+
 	findRow(tileId: number): number {
 		return tileId % 3 ? ~~(tileId / 3) : tileId / 3 - 1;
 	}
+
 	findCol(tileId: number): number {
 		return tileId % 3 ? (tileId % 3) - 1 : 2;
 	}
-	// checkForWinner(): boolean {
-	// 	return (
-	// 		this.checkCol() || this.checkRow() || this.checkMajor() || this.checkMinor
-	// 	);
-	// }
+
+	checkForWinner(): string {
+		(this.checkWinLine(this.getAllRow()) ||
+			this.checkWinLine(this.getAllCol()) ||
+			this.checkWinLine(this.getMajor()) ||
+			this.checkWinLine(this.getMinor())) &&
+			console.log("win");
+	}
+
 	getAllCol(): string {
 		const gridColoms: (string | undefined)[][] = Array.from({
 			length: 3,
@@ -70,14 +82,32 @@ class Main {
 		});
 		return gridColoms.map((col) => col.join("")).join("/");
 	}
+
 	checkWinLine(compressedRows: string): boolean {
 		return /(XXX)|(OOO)/.test(compressedRows);
 	}
+
 	getAllRow(): string {
 		return this.grid.map((row) => row.join("")).join("/");
 	}
-	checkMajor(): boolean {}
-	checkMinor(): boolean {}
+	//temporary solution since it's always a 3 by 3 grid
+	getMajor(): string {
+		return this.grid
+			.map((row, rowIndex) =>
+				row.filter((tileValue, collIndex) => rowIndex === collIndex).join("")
+			)
+			.join("");
+	}
+	//temporary solution since it's always a 3 by 3 grid
+	getMinor(): string {
+		return this.grid
+			.map((row, rowIndex) =>
+				row
+					.filter((tilesValue, collIndex) => collIndex + rowIndex === 2)
+					.join("")
+			)
+			.join("");
+	}
 }
 
 $(document).ready(function () {

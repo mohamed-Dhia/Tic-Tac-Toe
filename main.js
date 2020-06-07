@@ -39,6 +39,7 @@ var Main = /** @class */ (function () {
         !$("#" + tileId)[0].innerHTML &&
             ($("#" + tileId)[0].innerHTML = this.turnPlayer);
         this.grid[row][col] = this.turnPlayer;
+        this.checkForWinner();
         this.switchTurnPlayer();
     };
     Main.prototype.switchTurnPlayer = function () {
@@ -50,11 +51,13 @@ var Main = /** @class */ (function () {
     Main.prototype.findCol = function (tileId) {
         return tileId % 3 ? (tileId % 3) - 1 : 2;
     };
-    // checkForWinner(): boolean {
-    // 	return (
-    // 		this.checkCol() || this.checkRow() || this.checkMajor() || this.checkMinor
-    // 	);
-    // }
+    Main.prototype.checkForWinner = function () {
+        (this.checkWinLine(this.getAllRow()) ||
+            this.checkWinLine(this.getAllCol()) ||
+            this.checkWinLine(this.getMajor()) ||
+            this.checkWinLine(this.getMinor())) &&
+            console.log("win");
+    };
     Main.prototype.getAllCol = function () {
         var gridColoms = Array.from({
             length: 3
@@ -72,8 +75,24 @@ var Main = /** @class */ (function () {
     Main.prototype.getAllRow = function () {
         return this.grid.map(function (row) { return row.join(""); }).join("/");
     };
-    Main.prototype.checkMajor = function () { };
-    Main.prototype.checkMinor = function () { };
+    //temporary solution since it's always a 3 by 3 grid
+    Main.prototype.getMajor = function () {
+        return this.grid
+            .map(function (row, rowIndex) {
+            return row.filter(function (tileValue, collIndex) { return rowIndex === collIndex; }).join("");
+        })
+            .join("");
+    };
+    //temporary solution since it's always a 3 by 3 grid
+    Main.prototype.getMinor = function () {
+        return this.grid
+            .map(function (row, rowIndex) {
+            return row
+                .filter(function (tilesValue, collIndex) { return collIndex + rowIndex === 2; })
+                .join("");
+        })
+            .join("");
+    };
     return Main;
 }());
 $(document).ready(function () {
