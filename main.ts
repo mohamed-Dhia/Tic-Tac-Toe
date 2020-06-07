@@ -47,7 +47,10 @@ class Main {
 		!$(`#${tileId}`)[0].innerHTML &&
 			($(`#${tileId}`)[0].innerHTML = this.turnPlayer);
 		this.grid[row][col] = this.turnPlayer;
-		this.checkForWinner();
+		this.numberOfTurns++;
+		((this.checkForWinner() && alert(`player ${this.turnPlayer} won`)) ||
+			(this.checkforDraw() && alert("draw"))) &&
+			this.clearBoard();
 		this.switchTurnPlayer();
 	}
 
@@ -63,12 +66,13 @@ class Main {
 		return tileId % 3 ? (tileId % 3) - 1 : 2;
 	}
 
-	checkForWinner(): string {
-		(this.checkWinLine(this.getAllRow()) ||
+	checkForWinner(): boolean {
+		return (
+			this.checkWinLine(this.getAllRow()) ||
 			this.checkWinLine(this.getAllCol()) ||
 			this.checkWinLine(this.getMajor()) ||
-			this.checkWinLine(this.getMinor())) &&
-			console.log("win");
+			this.checkWinLine(this.getMinor())
+		);
 	}
 
 	getAllCol(): string {
@@ -107,6 +111,17 @@ class Main {
 					.join("")
 			)
 			.join("");
+	}
+
+	clearBoard(): void {
+		this.grid = Array.from({ length: 3 }).map(() => Array.from({ length: 3 }));
+		$("#main").html("");
+		this.numberOfTurns = 0;
+		this.displayGrid();
+	}
+
+	checkforDraw() {
+		return this.numberOfTurns >= 9;
 	}
 }
 
