@@ -3,13 +3,11 @@ declare const _: any;
 class Main {
 	turnPlayer: string;
 	numberOfTurns: number;
-	grid: (number | string)[][];
+	grid: (string | undefined)[][];
 	constructor(startingPalyer: string = "X") {
 		this.turnPlayer = startingPalyer;
 		this.numberOfTurns = 0;
-		this.grid = Array.from({ length: 3 }).map(() =>
-			Array.from({ length: 3 }).map(() => 0)
-		);
+		this.grid = Array.from({ length: 3 }).map(() => Array.from({ length: 3 }));
 	}
 	displayGrid(): void {
 		const $main = $("#main");
@@ -56,9 +54,33 @@ class Main {
 	findCol(tileId: number): number {
 		return tileId % 3 ? (tileId % 3) - 1 : 2;
 	}
+	// checkForWinner(): boolean {
+	// 	return (
+	// 		this.checkCol() || this.checkRow() || this.checkMajor() || this.checkMinor
+	// 	);
+	// }
+	getAllCol(): string {
+		const gridColoms: (string | undefined)[][] = Array.from({
+			length: 3,
+		}).map(() => Array.from({ length: 3 }));
+		this.grid.forEach((row, rowIndex) => {
+			row.forEach((tileValue, collIndex) => {
+				gridColoms[collIndex][rowIndex] = tileValue;
+			});
+		});
+		return gridColoms.map((col) => col.join("")).join("/");
+	}
+	checkWinLine(compressedRows: string): boolean {
+		return /(XXX)|(OOO)/.test(compressedRows);
+	}
+	getAllRow(): string {
+		return this.grid.map((row) => row.join("")).join("/");
+	}
+	checkMajor(): boolean {}
+	checkMinor(): boolean {}
 }
 
 $(document).ready(function () {
-	const main = new Main();
-	main.displayGrid();
+	const instant = new Main();
+	instant.displayGrid();
 });

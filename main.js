@@ -3,9 +3,7 @@ var Main = /** @class */ (function () {
         if (startingPalyer === void 0) { startingPalyer = "X"; }
         this.turnPlayer = startingPalyer;
         this.numberOfTurns = 0;
-        this.grid = Array.from({ length: 3 }).map(function () {
-            return Array.from({ length: 3 }).map(function () { return 0; });
-        });
+        this.grid = Array.from({ length: 3 }).map(function () { return Array.from({ length: 3 }); });
     }
     Main.prototype.displayGrid = function () {
         var _this = this;
@@ -52,9 +50,33 @@ var Main = /** @class */ (function () {
     Main.prototype.findCol = function (tileId) {
         return tileId % 3 ? (tileId % 3) - 1 : 2;
     };
+    // checkForWinner(): boolean {
+    // 	return (
+    // 		this.checkCol() || this.checkRow() || this.checkMajor() || this.checkMinor
+    // 	);
+    // }
+    Main.prototype.getAllCol = function () {
+        var gridColoms = Array.from({
+            length: 3
+        }).map(function () { return Array.from({ length: 3 }); });
+        this.grid.forEach(function (row, rowIndex) {
+            row.forEach(function (tileValue, collIndex) {
+                gridColoms[collIndex][rowIndex] = tileValue;
+            });
+        });
+        return gridColoms.map(function (col) { return col.join(""); }).join("/");
+    };
+    Main.prototype.checkWinLine = function (compressedRows) {
+        return /(XXX)|(OOO)/.test(compressedRows);
+    };
+    Main.prototype.getAllRow = function () {
+        return this.grid.map(function (row) { return row.join(""); }).join("/");
+    };
+    Main.prototype.checkMajor = function () { };
+    Main.prototype.checkMinor = function () { };
     return Main;
 }());
 $(document).ready(function () {
-    var main = new Main();
-    main.displayGrid();
+    var instant = new Main();
+    instant.displayGrid();
 });
