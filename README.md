@@ -14,7 +14,7 @@ it's a simple static web page where you can play tic tac toe with a friend
 
 #### *what technologies did i use*
 
-I used Typescript,HTML5,CSS3,jquery and lowdash
+I've used Typescript ,HTML5 ,CSS3 ,jquery and lowdash
 
 ------
 
