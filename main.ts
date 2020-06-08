@@ -4,7 +4,6 @@ class Main {
 	turnPlayer: string;
 	numberOfTurns: number;
 	grid: (string | undefined)[][];
-
 	constructor(startingPalyer: string = "X") {
 		this.turnPlayer = startingPalyer;
 		this.numberOfTurns = 0;
@@ -16,10 +15,15 @@ class Main {
 		$main.addClass("grid-container");
 		$main.css({
 			display: "grid",
-			"grid-template-columns": "auto auto auto",
+			width: "20rem",
+			"text-align": "center",
+			"justify-content": "center",
+			"align-content": "center",
+			"grid-template-columns": "100px 100px 100px",
 			"grid-gap": "10px",
 			"background-color": "#2196F3",
 			padding: "10px",
+			margin: "auto",
 		});
 		_.range(1, 10).forEach((number: number) => {
 			$main.append(this.createTile(number));
@@ -35,10 +39,11 @@ class Main {
 		});
 		$tile.css({
 			"background-color": "rgba(255, 255, 255, 0.8)",
+			width: "3rem",
+			height: "2rem",
 			border: "1px solid rgba(0, 0, 0, 0.8)",
 			padding: "20px",
 			"font-size": "30px",
-			"text-align": "center",
 		});
 		return $tile;
 	}
@@ -48,10 +53,20 @@ class Main {
 			($(`#${tileId}`)[0].innerHTML = this.turnPlayer);
 		this.grid[row][col] = this.turnPlayer;
 		this.numberOfTurns++;
-		((this.checkForWinner() && alert(`player ${this.turnPlayer} won`)) ||
-			(this.checkforDraw() && alert("draw"))) &&
-			this.clearBoard();
+		this.checkGameState();
 		this.switchTurnPlayer();
+	}
+
+	checkGameState() {
+		((this.checkForWinner() &&
+			this.declareGameResult(`player ${this.turnPlayer} won`)) ||
+			(this.checkforDraw() && this.declareGameResult("draw"))) &&
+			this.clearBoard();
+	}
+
+	declareGameResult(msg: string) {
+		alert(msg);
+		return true;
 	}
 
 	switchTurnPlayer(): void {
@@ -126,6 +141,6 @@ class Main {
 }
 
 $(document).ready(function () {
-	const instant = new Main();
-	instant.displayGrid();
+	const main = new Main();
+	main.displayGrid();
 });

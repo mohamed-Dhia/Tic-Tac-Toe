@@ -11,10 +11,15 @@ var Main = /** @class */ (function () {
         $main.addClass("grid-container");
         $main.css({
             display: "grid",
-            "grid-template-columns": "auto auto auto",
+            width: "20rem",
+            "text-align": "center",
+            "justify-content": "center",
+            "align-content": "center",
+            "grid-template-columns": "100px 100px 100px",
             "grid-gap": "10px",
             "background-color": "#2196F3",
-            padding: "10px"
+            padding: "10px",
+            margin: "auto"
         });
         _.range(1, 10).forEach(function (number) {
             $main.append(_this.createTile(number));
@@ -28,10 +33,11 @@ var Main = /** @class */ (function () {
         });
         $tile.css({
             "background-color": "rgba(255, 255, 255, 0.8)",
+            width: "3rem",
+            height: "2rem",
             border: "1px solid rgba(0, 0, 0, 0.8)",
             padding: "20px",
-            "font-size": "30px",
-            "text-align": "center"
+            "font-size": "30px"
         });
         return $tile;
     };
@@ -40,10 +46,18 @@ var Main = /** @class */ (function () {
             ($("#" + tileId)[0].innerHTML = this.turnPlayer);
         this.grid[row][col] = this.turnPlayer;
         this.numberOfTurns++;
-        ((this.checkForWinner() && alert("player " + this.turnPlayer + " won")) ||
-            (this.checkforDraw() && alert("draw"))) &&
-            this.clearBoard();
+        this.checkGameState();
         this.switchTurnPlayer();
+    };
+    Main.prototype.checkGameState = function () {
+        ((this.checkForWinner() &&
+            this.declareGameResult("player " + this.turnPlayer + " won")) ||
+            (this.checkforDraw() && this.declareGameResult("draw"))) &&
+            this.clearBoard();
+    };
+    Main.prototype.declareGameResult = function (msg) {
+        alert(msg);
+        return true;
     };
     Main.prototype.switchTurnPlayer = function () {
         this.turnPlayer = this.turnPlayer === "X" ? "O" : "X";
@@ -107,6 +121,6 @@ var Main = /** @class */ (function () {
     return Main;
 }());
 $(document).ready(function () {
-    var instant = new Main();
-    instant.displayGrid();
+    var main = new Main();
+    main.displayGrid();
 });
