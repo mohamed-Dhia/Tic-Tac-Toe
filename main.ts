@@ -49,22 +49,28 @@ class Main {
 	}
 
 	fillTile(tileId: number, row: number, col: number): void {
-		!$(`#${tileId}`)[0].innerHTML &&
-			($(`#${tileId}`)[0].innerHTML = this.turnPlayer);
-		this.grid[row][col] = this.turnPlayer;
+		if ($(`#${tileId}`)[0].innerHTML) return;
+		$(`#${tileId}`)[0].innerHTML = this.turnPlayer;
+		this.colorTile(tileId);
 		this.numberOfTurns++;
+		this.grid[row][col] = this.turnPlayer;
 		this.checkGameState();
 		this.switchTurnPlayer();
 	}
 
-	checkGameState() {
+	colorTile(tileId: number): void {
+		const color = this.turnPlayer === "X" ? "red" : "blue";
+		$(`#${tileId}`).css("color", color);
+	}
+
+	checkGameState(): void {
 		((this.checkForWinner() &&
 			this.declareGameResult(`player ${this.turnPlayer} won`)) ||
 			(this.checkforDraw() && this.declareGameResult("draw"))) &&
 			this.clearBoard();
 	}
 
-	declareGameResult(msg: string) {
+	declareGameResult(msg: string): boolean {
 		alert(msg);
 		return true;
 	}
@@ -135,7 +141,7 @@ class Main {
 		this.displayGrid();
 	}
 
-	checkforDraw() {
+	checkforDraw(): boolean {
 		return this.numberOfTurns >= 9;
 	}
 }

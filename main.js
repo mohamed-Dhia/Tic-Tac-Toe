@@ -42,12 +42,18 @@ var Main = /** @class */ (function () {
         return $tile;
     };
     Main.prototype.fillTile = function (tileId, row, col) {
-        !$("#" + tileId)[0].innerHTML &&
-            ($("#" + tileId)[0].innerHTML = this.turnPlayer);
-        this.grid[row][col] = this.turnPlayer;
+        if ($("#" + tileId)[0].innerHTML)
+            return;
+        $("#" + tileId)[0].innerHTML = this.turnPlayer;
+        this.colorTile(tileId);
         this.numberOfTurns++;
+        this.grid[row][col] = this.turnPlayer;
         this.checkGameState();
         this.switchTurnPlayer();
+    };
+    Main.prototype.colorTile = function (tileId) {
+        var color = this.turnPlayer === "X" ? "red" : "blue";
+        $("#" + tileId).css("color", color);
     };
     Main.prototype.checkGameState = function () {
         ((this.checkForWinner() &&
