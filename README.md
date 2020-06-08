@@ -20,4 +20,4 @@ I've used Typescript ,HTML5 ,CSS3 ,jquery and lowdash
 
 #### *how to run this project*
 
-just open main.html file in your web browser
+just open main.html file in your web browser 😜
